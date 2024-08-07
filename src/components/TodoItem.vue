@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, defineEmits } from "vue";
 
 // `props` で受け取る
 const props = defineProps({
@@ -9,6 +9,9 @@ const props = defineProps({
   }
 });
 
+// 親コンポーネントにイベントを送信するための`emit`関数を定義
+const emit = defineEmits(['update:todos']);
+
 const hideCompleted = ref(false);
 
 const filteredTodos = computed(() => {
@@ -16,14 +19,15 @@ const filteredTodos = computed(() => {
 });
 
 function removeTodo(todo) {
-  // `props.todos` を更新する形にする
-  props.todos.splice(props.todos.indexOf(todo), 1);
+  // `emit` を使って親に更新を通知
+  const updatedTodos = props.todos.filter((t) => t !== todo);
+  emit('update:todos', updatedTodos);
 }
 </script>
 
 <template>
   <div>
-    <p v-if="props.todos.length === 0">ToDoがまだありません！</p>
+    <p v-if="todos.length === 0">ToDoがまだありません！</p>
     <ul>
       <li v-for="todo in filteredTodos" :key="todo.id">
         <input type="checkbox" v-model="todo.done" />
