@@ -1,19 +1,43 @@
 <script setup>
 import { ref } from "vue";
 import TodoItem from "../components/TodoItem.vue";
+import axios from 'axios';
 
-let id = 0;
+
+const apiUrl = 'http://localhost:8080/api/todos';
 const todos = ref([]);
 const titleClass = ref("title");
 const newTodo = ref("");
 
-function addTodo() {
-  todos.value.push({ id: id++, text: newTodo.value, done: false });
-  newTodo.value = '';
+// 既存のToDoを取得
+async function fetchTodos() {
+  try {
+    const response = await axios.get(apiUrl);
+    todos.value = response.data;
+  } catch (error) {
+    console.error('Error fetching todos:', error);
+  }
 }
+
+// 新しいToDoを追加
+async function addTodo() {
+  try {
+    const response = await axios.post(apiUrl, {
+      text: newTodo.value,
+      done: false
+    });
+    todos.value.push(response.data);
+    newTodo.value = '';
+  } catch (error) {
+    console.error('Error adding todo:', error);
+  }
+}
+
 function updateTodos(updatedTodos) {
-  todos.value = updatedTodos; // 親コンポーネントの`todos`を更新
+  todos.value = updatedTodos;
 }
+
+fetchTodos();
 </script>
 
 <template>
@@ -22,7 +46,6 @@ function updateTodos(updatedTodos) {
     <input v-model="newTodo" required placeholder="タスクを書いてね" class="input-box" />
     <button type="submit" class="submit-button">追加</button>
   </form>
-  <!-- `todos` を `TodoItem` に渡し、更新イベントを受け取る -->
   <TodoItem :todos="todos" @update:todos="updateTodos" />
 </template>
 
@@ -32,22 +55,22 @@ function updateTodos(updatedTodos) {
 }
 
 .input-box {
-  border: 2px solid orange; /* テキストボックスの縁の色をオレンジに設定 */
-  padding: 5px; /* テキストボックス内の余白を設定 */
-  border-radius: 4px; /* 角を少し丸める */
+  border: 2px solid orange;
+  padding: 5px;
+  border-radius: 4px;
 }
 
 .submit-button {
   background-color: orange;
   border: 2px solid orange;
-  color: white; /* テキストの色をオレンジに設定 */
-  padding: 5px 10px; /* ボタン内の余白を設定 */
-  border-radius: 4px; /* 角を少し丸める */
-  cursor: pointer; /* カーソルをポインタに変更 */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .submit-button:hover {
-  background-color: white; /* ホバー時の背景色をオレンジに変更 */
-  color: orange; /* ホバー時のテキスト色を白に変更 */
+  background-color: white;
+  color: orange;
 }
 </style>

@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",  // baseUrl を設定
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["*"]  // baseUrl が ./src なので、* が正しい
     }
   },
   "exclude": ["node_modules", "dist"]
 }
+

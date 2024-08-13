@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, defineProps, defineEmits } from "vue";
 
-// `props` で受け取る
 const props = defineProps({
   todos: {
     type: Array,
@@ -9,18 +8,16 @@ const props = defineProps({
   }
 });
 
-// 親コンポーネントにイベントを送信するための`emit`関数を定義
 const emit = defineEmits(['update:todos']);
 
 const hideCompleted = ref(false);
 
 const filteredTodos = computed(() => {
-  return hideCompleted.value ? props.todos.filter((t) => !t.done) : props.todos;
+  return hideCompleted.value ? props.todos.filter(t => !t.done) : props.todos;
 });
 
 function removeTodo(todo) {
-  // `emit` を使って親に更新を通知
-  const updatedTodos = props.todos.filter((t) => t !== todo);
+  const updatedTodos = props.todos.filter(t => t !== todo);
   emit('update:todos', updatedTodos); // 親コンポーネントに削除後の配列を通知
 }
 </script>
@@ -32,7 +29,7 @@ function removeTodo(todo) {
       <li v-for="todo in filteredTodos" :key="todo.id" class="todo-item">
         <input type="checkbox" v-model="todo.done" class="checkbox" />
         <span :class="{ done: todo.done }" class="todo-text">{{ todo.text }}</span>
-        <button @click="removeTodo(todo)" class="remove-button">完了</button>
+        <button @click="removeTodo(todo)" class="remove-button">削除</button>
       </li>
     </ul>
     <button @click="hideCompleted = !hideCompleted" class="toggle-button">
@@ -44,15 +41,15 @@ function removeTodo(todo) {
 <style scoped>
 .done {
   text-decoration: line-through;
-  color: orange; /* 完了したタスクのテキスト色をオレンジに */
+  color: orange;
 }
 
 .checkbox {
-  accent-color: orange; /* チェックボックスの色をオレンジに */
+  accent-color: orange;
 }
 
 .todo-text {
-  color: black; /* 未完了タスクのテキスト色を黒に設定 */
+  color: black;
 }
 
 .remove-button {
@@ -85,6 +82,6 @@ function removeTodo(todo) {
 }
 
 .todo-item {
-  margin-bottom: 10px; /* タスク間のスペースを広げる */
+  margin-bottom: 10px;
 }
 </style>
