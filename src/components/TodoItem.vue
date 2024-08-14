@@ -28,7 +28,7 @@ function removeTodo(todo) {
     <ul>
       <li v-for="todo in filteredTodos" :key="todo.id" class="todo-item">
         <input type="checkbox" v-model="todo.done" class="checkbox" />
-        <span :class="{ done: todo.done }" class="todo-text">{{ todo.text }}</span>
+        <span :class="{ done: todo.done }" class="todo-text">{{ todo.title }}</span>
         <button @click="removeTodo(todo)" class="remove-button">削除</button>
       </li>
     </ul>

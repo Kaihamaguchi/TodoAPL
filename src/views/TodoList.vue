@@ -4,7 +4,7 @@ import TodoItem from "../components/TodoItem.vue";
 import axios from 'axios';
 
 
-const apiUrl = 'http://localhost:8080/api/todos';
+const apiUrl = 'http://localhost:8081/api/todos';
 const todos = ref([]);
 const titleClass = ref("title");
 const newTodo = ref("");
@@ -23,15 +23,18 @@ async function fetchTodos() {
 async function addTodo() {
   try {
     const response = await axios.post(apiUrl, {
-      text: newTodo.value,
-      done: false
+      title: newTodo.value,  // "text" を "title" に変更
+      completed: false       // "done" を "completed" に変更
     });
     todos.value.push(response.data);
+    console.log(response.data);
     newTodo.value = '';
   } catch (error) {
     console.error('Error adding todo:', error);
   }
 }
+
+
 
 function updateTodos(updatedTodos) {
   todos.value = updatedTodos;
