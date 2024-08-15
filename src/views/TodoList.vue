@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import TodoItem from "../components/TodoItem.vue";
-import axios from 'axios';
+import axios from "axios";
 
-
-const apiUrl = 'http://localhost:8081/api/todos';
+const apiUrl = "http://localhost:8081/api/todos";
 const todos = ref([]);
 const titleClass = ref("title");
 const newTodo = ref("");
@@ -15,7 +14,7 @@ async function fetchTodos() {
     const response = await axios.get(apiUrl);
     todos.value = response.data;
   } catch (error) {
-    console.error('Error fetching todos:', error);
+    console.error("Error fetching todos:", error);
   }
 }
 
@@ -23,18 +22,16 @@ async function fetchTodos() {
 async function addTodo() {
   try {
     const response = await axios.post(apiUrl, {
-      title: newTodo.value,  // "text" を "title" に変更
-      completed: false       // "done" を "completed" に変更
+      title: newTodo.value, // "text" を "title" に変更、
+      //ここがバックエンドのTodo.javaの名前と等しくないとやり取りできない。下も同様
+      completed: false, // "done" を "completed" に変更
     });
     todos.value.push(response.data);
-    console.log(response.data);
-    newTodo.value = '';
+    newTodo.value = "";
   } catch (error) {
-    console.error('Error adding todo:', error);
+    console.error("Error adding todo:", error);
   }
 }
-
-
 
 function updateTodos(updatedTodos) {
   todos.value = updatedTodos;
@@ -46,7 +43,12 @@ fetchTodos();
 <template>
   <form @submit.prevent="addTodo">
     <h1 :class="titleClass">ToDo(やることリスト)</h1>
-    <input v-model="newTodo" required placeholder="タスクを書いてね" class="input-box" />
+    <input
+      v-model="newTodo"
+      required
+      placeholder="タスクを書いてね"
+      class="input-box"
+    />
     <button type="submit" class="submit-button">追加</button>
   </form>
   <TodoItem :todos="todos" @update:todos="updateTodos" />
